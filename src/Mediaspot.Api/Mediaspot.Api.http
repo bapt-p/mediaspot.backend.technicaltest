@@ -40,3 +40,45 @@ Content-Type: application/json
 POST {{Mediaspot_Api_HostAddress}}/assets/{{assetId}}/archive
 
 ###
+
+### Create Title
+POST {{Mediaspot_Api_HostAddress}}/titles
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Star Wars: The Phantom Menace",
+  "description": "Science-fiction movie",
+  "releaseDate": "1999-10-13",
+  "type": 1
+}
+
+###
+
+@titleId = REMPLACER_PAR_LE_GUID_RETOURNE
+
+### Get Title By Id
+GET {{Mediaspot_Api_HostAddress}}/titles/{{titleId}}
+Accept: application/json
+
+###
+
+### Get All Titles
+GET {{Mediaspot_Api_HostAddress}}/titles
+Accept: application/json
+
+###
+
+### Update Title
+PUT {{Mediaspot_Api_HostAddress}}/titles/{{titleId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Star Wars: Episode I - The Phantom Menace",
+  "description": "Updated science-fiction movie",
+  "releaseDate": "1999-10-13",
+  "type": 1
+}
+
+###

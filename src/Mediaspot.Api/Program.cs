@@ -1,9 +1,14 @@
+using System.Xml;
 using Mediaspot.Api.DTOs;
 using Mediaspot.Application.Assets.Commands.Archive;
 using Mediaspot.Application.Assets.Commands.Create;
 using Mediaspot.Application.Assets.Commands.RegisterMediaFile;
 using Mediaspot.Application.Assets.Commands.UpdateMetadata;
 using Mediaspot.Application.Assets.Queries.GetById;
+using Mediaspot.Application.Titles.Commands.CreateTitle;
+using Mediaspot.Application.Titles.Commands.UpdateTitle;
+using Mediaspot.Application.Titles.Queries.GetTitleById;
+using Mediaspot.Application.Titles.Queries.GetTitles;
 using Mediaspot.Infrastructure;
 using Mediaspot.Infrastructure.Persistence;
 using MediatR;
@@ -65,6 +70,43 @@ app.MapPost("/assets/{id:guid}/archive", async (Guid id, ISender sender) =>
         return Results.NoContent();
     })
     .WithName("PostArchiveAsset")
+    .WithOpenApi();
+
+
+app.MapPost("/assets", async (CreateAssetCommand cmd, ISender sender) => Results.Created("/assets", new { id = await sender.Send(cmd) }))
+    .WithName("PostCreateAsset")
+    .WithOpenApi();
+
+
+app.MapPost("/titles", async (CreateTitleCommand cmd, ISender sender) => Results.Created("/titles", new { id = await sender.Send(cmd) }))
+    .WithName("CreateTitle")
+    .WithOpenApi();
+
+app.MapPut("/titles/{id:guid}", async (Guid id, UpdateTitleDto dto, ISender sender) =>
+{
+    await sender.Send(new UpdateTitleCommand(id, dto.Name, dto.Description, dto.ReleaseDate, dto.Type));
+    return Results.NoContent();
+
+})
+  .WithName("PutUpdateTitle")
+  .WithOpenApi();
+
+app.MapGet("/titles/{id:guid}", async (Guid id, ISender sender) =>
+{
+    var title = await sender.Send(new GetTitleByIdQuery(id));
+    return title is null
+       ? Results.NotFound()
+       : Results.Ok(title);
+})
+    .WithName("GetTitleById")
+    .WithOpenApi();
+
+app.MapGet("/titles", async (ISender sender) =>
+{
+    var title = await sender.Send(new GetTitlesQuery());
+    return Results.Ok(title);
+})
+    .WithName("GetTitle")
     .WithOpenApi();
 
 app.Run();
