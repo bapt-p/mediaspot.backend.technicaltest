@@ -10,6 +10,8 @@ public sealed class TranscodeJob : AggregateRoot
     public Guid MediaFileId { get; private set; }
     public string Preset { get; private set; }
     public TranscodeStatus Status { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset UpdatedAt { get; private set; }
 
     private TranscodeJob() { AssetId = Guid.Empty; MediaFileId = Guid.Empty; Preset = string.Empty; }
 
