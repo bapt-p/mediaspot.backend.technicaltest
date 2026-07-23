@@ -1,4 +1,4 @@
-﻿using Mediaspot.Application.Assets.Commands.Create;
+﻿using Mediaspot.Application.Assets.Commands.Create.CreateVideoAsset;
 using Mediaspot.Application.Common;
 using Mediaspot.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,7 @@ public static class DependencyInjection
         services.AddScoped<ITitleRepository, TitleRepository>();
 
         // MediatR
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateAssetCommand).Assembly));
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateVideoAssetCommand).Assembly));
 
         return services;
     }
