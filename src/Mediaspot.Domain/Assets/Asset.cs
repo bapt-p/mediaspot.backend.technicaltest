@@ -4,7 +4,7 @@ using Mediaspot.Domain.Common;
 
 namespace Mediaspot.Domain.Assets;
 
-public sealed class Asset : AggregateRoot
+public abstract class Asset : AggregateRoot
 {
     private readonly List<MediaFile> _mediaFiles = [];
 
@@ -14,9 +14,9 @@ public sealed class Asset : AggregateRoot
 
     public IReadOnlyCollection<MediaFile> MediaFiles => _mediaFiles.AsReadOnly();
 
-    private Asset() { ExternalId = string.Empty; Metadata = new("", null, null); }
+    protected Asset() { ExternalId = string.Empty; Metadata = new("", null, null); }
 
-    public Asset(string externalId, Metadata metadata)
+    protected Asset(string externalId, Metadata metadata)
     {
         ExternalId = externalId;
         Metadata = metadata;
