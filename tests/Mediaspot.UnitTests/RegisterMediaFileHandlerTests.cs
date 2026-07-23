@@ -12,7 +12,12 @@ public class RegisterMediaFileHandlerTests
     [Fact]
     public async Task Handle_Should_Register_MediaFile_And_Save()
     {
-        var asset = new Asset("ext", new Metadata("t", null, null));
+        var duration = new Duration(TimeSpan.FromSeconds(240));
+        var resolution = "1080p";
+        var framerate = 24;
+        var codec = "H264";
+
+        var asset = new VideoAsset("ext", new Metadata("t", null, null), duration, resolution, framerate, codec);
         var repo = new Mock<IAssetRepository>();
         var uow = new Mock<IUnitOfWork>();
         repo.Setup(r => r.GetAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(asset);
