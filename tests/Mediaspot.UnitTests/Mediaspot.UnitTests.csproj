@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Mediaspot.Domain\Mediaspot.Domain.csproj" />
     <ProjectReference Include="..\..\src\Mediaspot.Application\Mediaspot.Application.csproj" />
+    <ProjectReference Include="..\..\src\Mediaspot.Worker\Mediaspot.Worker.csproj" />
   </ItemGroup>
 
 </Project>
