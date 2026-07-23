@@ -1,7 +1,7 @@
-using System.Xml;
 using Mediaspot.Api.DTOs;
 using Mediaspot.Application.Assets.Commands.Archive;
-using Mediaspot.Application.Assets.Commands.Create;
+using Mediaspot.Application.Assets.Commands.Create.CreateAudioAsset;
+using Mediaspot.Application.Assets.Commands.Create.CreateVideoAsset;
 using Mediaspot.Application.Assets.Commands.RegisterMediaFile;
 using Mediaspot.Application.Assets.Commands.UpdateMetadata;
 using Mediaspot.Application.Assets.Queries.GetById;
@@ -47,10 +47,6 @@ app.MapGet("/assets/{id:guid}", async (Guid id, ISender sender) =>
     .WithName("GetAssetById")
     .WithOpenApi();
 
-app.MapPost("/assets", async (CreateAssetCommand cmd, ISender sender) => Results.Created("/assets", new { id = await sender.Send(cmd) }))
-    .WithName("PostCreateAsset")
-    .WithOpenApi();
-
 app.MapPost("/assets/{id:guid}/files", async (Guid id, string path, double durationSeconds, ISender sender)
         => Results.Ok(new { mediaFileId = await sender.Send(new RegisterMediaFileCommand(id, path, durationSeconds)) }))
     .WithName("PostRegisterMediaFile")
@@ -70,11 +66,6 @@ app.MapPost("/assets/{id:guid}/archive", async (Guid id, ISender sender) =>
         return Results.NoContent();
     })
     .WithName("PostArchiveAsset")
-    .WithOpenApi();
-
-
-app.MapPost("/assets", async (CreateAssetCommand cmd, ISender sender) => Results.Created("/assets", new { id = await sender.Send(cmd) }))
-    .WithName("PostCreateAsset")
     .WithOpenApi();
 
 
@@ -108,5 +99,25 @@ app.MapGet("/titles", async (ISender sender) =>
 })
     .WithName("GetTitle")
     .WithOpenApi();
+
+
+// TYPE-SPECIFIC ASSET ENDPOINTS - SUPPORTS VIDEO AND AUDIO ASSET TYPES
+// These endpoints replace the generic /assets endpoint and provide dedicated handling
+// for VideoAsset (with Resolution, FrameRate, Codec) and AudioAsset (with Bitrate, SampleRate, Channels).
+// Each type has its own validation, processing logic, and transcode management.
+
+app.MapPost("/assets/video",
+    async (CreateVideoAssetCommand cmd, ISender sender) =>
+        Results.Created("/assets/video", new { id = await sender.Send(cmd) }))
+    .WithName("PostCreateVideoAsset")
+    .WithOpenApi();
+
+app.MapPost("/assets/audio",
+    async (CreateAudioAssetCommand cmd, ISender sender) =>
+        Results.Created("/assets/audio", new { id = await sender.Send(cmd) }))
+    .WithName("PostCreateAudioAsset")
+    .WithOpenApi();
+
+
 
 app.Run();

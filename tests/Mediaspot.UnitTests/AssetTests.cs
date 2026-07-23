@@ -10,8 +10,14 @@ public class AssetTests
     [Fact]
     public void Constructor_Should_Set_Properties_And_Raise_AssetCreated()
     {
+        var duration = new Duration(TimeSpan.FromSeconds(240));
+        var resolution = "1080p";
+        var framerate = 24;
+        var codec = "H264";
+
+
         var metadata = new Metadata("title", "desc", "en");
-        var asset = new Asset("ext-1", metadata);
+        var asset = new VideoAsset("ext-1", metadata, duration, resolution, framerate, codec);
 
         asset.ExternalId.ShouldBe("ext-1");
         asset.Metadata.ShouldBe(metadata);
@@ -21,10 +27,15 @@ public class AssetTests
     [Fact]
     public void RegisterMediaFile_Should_Add_File_And_Raise_Event()
     {
-        var asset = new Asset("ext-2", new Metadata("t", null, null));
-        var path = new FilePath("/file.mp4");
         var duration = Duration.FromSeconds(10);
+        var resolution = "1080p";
+        var framerate = 24;
+        var codec = "H264";
 
+
+        var asset = new VideoAsset("ext-2", new Metadata("t", null, null), duration, resolution, framerate, codec);
+        var path = new FilePath("/file.mp4");
+        
         var mf = asset.RegisterMediaFile(path, duration);
 
         asset.MediaFiles.ShouldContain(mf);
@@ -34,7 +45,12 @@ public class AssetTests
     [Fact]
     public void UpdateMetadata_Should_Set_Metadata_And_Raise_Event()
     {
-        var asset = new Asset("ext-3", new Metadata("t", null, null));
+        var duration = new Duration(TimeSpan.FromSeconds(240));
+        var resolution = "1080p";
+        var framerate = 24;
+        var codec = "H264";
+
+        var asset = new VideoAsset("ext-3", new Metadata("t", null, null), duration, resolution, framerate, codec);
         var newMeta = new Metadata("new", "d", "fr");
 
         asset.UpdateMetadata(newMeta);
@@ -46,7 +62,12 @@ public class AssetTests
     [Fact]
     public void UpdateMetadata_Should_Throw_If_Title_Empty()
     {
-        var asset = new Asset("ext-4", new Metadata("t", null, null));
+        var duration = new Duration(TimeSpan.FromSeconds(240));
+        var resolution = "1080p";
+        var framerate = 24;
+        var codec = "H264";
+
+        var asset = new VideoAsset("ext-4", new Metadata("t", null, null), duration, resolution, framerate, codec);
         var invalid = new Metadata("", null, null);
 
         Should.Throw<ArgumentException>(() => asset.UpdateMetadata(invalid));
@@ -55,7 +76,12 @@ public class AssetTests
     [Fact]
     public void Archive_Should_Set_Archived_And_Raise_Event()
     {
-        var asset = new Asset("ext-5", new Metadata("t", null, null));
+        var duration = new Duration(TimeSpan.FromSeconds(240));
+        var resolution = "1080p";
+        var framerate = 24;
+        var codec = "H264";
+
+        var asset = new VideoAsset("ext-5", new Metadata("t", null, null), duration, resolution, framerate, codec);
         asset.Archive(_ => false);
 
         asset.Archived.ShouldBeTrue();
@@ -65,14 +91,24 @@ public class AssetTests
     [Fact]
     public void Archive_Should_Throw_If_ActiveJobs()
     {
-        var asset = new Asset("ext-6", new Metadata("t", null, null));
+        var duration = new Duration(TimeSpan.FromSeconds(240));
+        var resolution = "1080p";
+        var framerate = 24;
+        var codec = "H264";
+
+        var asset = new VideoAsset("ext-6", new Metadata("t", null, null), duration, resolution, framerate,codec);
         Should.Throw<InvalidOperationException>(() => asset.Archive(_ => true));
     }
 
     [Fact]
     public void Archive_Should_Be_Idempotent()
     {
-        var asset = new Asset("ext-7", new Metadata("t", null, null));
+        var duration = new Duration(TimeSpan.FromSeconds(240));
+        var resolution = "1080p";
+        var framerate = 24;
+        var codec = "H264"; 
+
+        var asset = new VideoAsset("ext-7", new Metadata("t", null, null), duration, resolution, framerate, codec);
         asset.Archive(_ => false);
         asset.Archive(_ => false);
         asset.Archived.ShouldBeTrue();

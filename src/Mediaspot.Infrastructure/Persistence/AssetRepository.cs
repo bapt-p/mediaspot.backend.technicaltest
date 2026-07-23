@@ -3,6 +3,7 @@ using Mediaspot.Domain.Assets;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mediaspot.Infrastructure.Persistence;
+
 public sealed class AssetRepository(MediaspotDbContext db) : IAssetRepository
 {
     public Task<Asset?> GetAsync(Guid id, CancellationToken ct)
